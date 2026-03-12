@@ -74,21 +74,21 @@ Add a `tag` field to each task and display it as a badge on the card. Since task
 
 Instead of using the general `PUT /todos/<id>` route to mark a task as completed, create a dedicated route just for it.
 
-- [ ] Add a `PATCH /todos/<id>/complete` route to `app.py` that sets the task as completed
+- [ ] Add a `PUT /todos/<id>/complete` route to `app.py` that sets the task as completed
 - [ ] Add a `completeTask(id)` function to `src/api.ts` that calls the new route
 - [ ] Update `App.tsx` to call `completeTask` instead of `updateTask` when marking a task as complete
 
 > **Hints**
 >
 > **Step 1 — Add the backend route**  
-> In `app.py`, register a new `PATCH` route below the existing ones:
+> In `app.py`, register a new `PUT` route below the existing ones:
 > ```python
-> @app.route('/todos/<int:todo_id>/complete', methods=['PATCH'])
+> @app.route('/todos/<int:todo_id>/complete', methods=['PUT'])
 > def complete_todo(todo_id):
 >     todo = crud.get_todo(todo_id)
 >     if todo is None:
 >         return jsonify({'error': 'Todo not found'}), 404
->     data = crud.update_todo(todo, {'completed': True, 'completedOn': todo['date']})
+>     data = crud.update_todo(todo_id, {'completed': True, 'completedOn': todo['date']})
 >     return jsonify(data), 200
 > ```
 >
@@ -96,7 +96,7 @@ Instead of using the general `PUT /todos/<id>` route to mark a task as completed
 > Add a new exported function alongside the existing ones:
 > ```ts
 > export async function completeTask(id: number): Promise<Task> {
->   const response = await fetch(`${BASE_URL}/todos/${id}/complete`, { method: "PATCH" });
+>   const response = await fetch(`${BASE_URL}/todos/${id}/complete`, { method: "PUT" });
 >   if (!response.ok) throw new Error("Failed to complete task");
 >   return mapTask(await response.json());
 > }
