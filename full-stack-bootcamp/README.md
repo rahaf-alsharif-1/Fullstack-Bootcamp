@@ -831,6 +831,18 @@ const handleToggleCompleted = (id: number) => {
 ### Complete component (for reference)
 
 ```tsx
+import { useEffect } from "react";
+import { createPortal } from "react-dom";
+import Crescent from "../assets/Crescent.svg";
+import type { TaskCardProps } from "./TaskCard";
+
+type TaskModalProps = TaskCardProps & {
+  open: boolean;
+  onClose: () => void;
+  onToggleCompleted?: () => void;
+  totalCrescents?: number;
+};
+
 const TaskModal = ({
   open, onClose, onToggleCompleted,
   title, description, date,
@@ -1003,7 +1015,7 @@ Here is the **final complete `App.tsx`** with all state and event handlers:
 import { useState }          from "react";
 import backGroundPattern      from "./assets/Background Vector.svg";
 import lanternRight           from "./assets/Right lanterns.png";
-import lanternLeft            from "./assets/Left lanterns.png";
+import lanternLeft            from "./assets/left lanterns.png";
 import Header                 from "./components/Header";
 import Input                  from "./components/Input";
 import TaskCard               from "./components/TaskCard";
