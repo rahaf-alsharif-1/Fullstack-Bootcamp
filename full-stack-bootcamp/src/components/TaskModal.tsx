@@ -74,10 +74,10 @@ const TaskModal = ({
     "w-full bg-(--bg-dark)/40 border border-(--gold-cream)/40 rounded-lg px-3 py-2 text-amber-100 text-sm outline-none focus:border-(--gold-cream) focus:ring-1 focus:ring-(--gold-primary)";
 
   return createPortal(
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/60 backdrop-blur-sm"
-      onClick={onClose}
-    >
+    <div 
+    className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/60 backdrop-blur-sm"
+    onClick={onClose}>
+    </div> >
       <div
         className={`relative w-full max-w-md bg-(--panel-deep) ${
           completed
@@ -283,12 +283,13 @@ const TaskModal = ({
               </div>
             </>
           )}
-        </div>
-      </div>
-    </div>,
+        </div> 
+          
+        )} 
+        </div> 
+     </div>,
     document.body
   );
 };
 
-export default TaskModal;
-
+export default TaskModal; 

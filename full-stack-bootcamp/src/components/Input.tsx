@@ -14,14 +14,32 @@ const Input = () => {
   return (
     <div className="w-full flex items-center justify-center">
       <div className="relative w-full max-w-4xl">
-
-        {/* TODO: <input> with placeholder, className for styling */}
-
-        {/* TODO: StarIcon button — absolute right-4, top-1/2 -translate-y-1/2 */}
-
+        <input
+          aria-label="Add task"
+          placeholder="Add your Next Ramadan Task Here......"
+          className="
+            w-full bg-(--bg-dark) bg-opacity-20 backdrop-blur-[3px]
+            border border-(--gold-cream) rounded-full
+            py-4 px-6 pl-12
+            placeholder:text-amber-200/50 text-amber-100
+            outline-none
+            focus:border-(--gold-cream) focus:ring-2 focus:ring-(--gold-primary)
+          "
+        />
+        <button className="absolute right-4 top-1/2 -translate-y-1/2
+                           w-10 h-10 flex items-center justify-center
+                           bg-transparent hover:brightness-105">
+          <img src={StarIcon} alt="Star Icon" className="w-8 h-8" />
+        </button>
       </div>
-
-      {/* TODO: AddIcon submit button */}
+      <button className="
+        ml-4 px-4 py-4 rounded-full
+        bg-(--bg-dark) bg-opacity-20 backdrop-blur-[3px]
+        border border-(--gold-cream) text-amber-100
+        hover:border-(--gold-cream)
+      ">
+        <img src={AddIcon} alt="Add Icon" className="w-5 h-5" />
+      </button>
 
     </div>
   );
