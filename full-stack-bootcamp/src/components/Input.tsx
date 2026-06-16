@@ -1,18 +1,24 @@
 import { useState } from "react";
 import StarIcon from "../assets/Star Icon.png";
 import AddIcon from "../assets/Edit Icon.png";
+import type { Task } from "../api";
 
-interface InputProps {
-  onAddTask: (description: string) => void;
-}
+type InputProps = {
+  onTaskAdded: (task: Task) => void;
+};
 
-const Input = ({ onAddTask }: InputProps) => {
+const Input = ({ onTaskAdded }: InputProps) => {
   const [value, setValue] = useState("");
 
-  const handleSubmit = () => {
-    if (!value.trim()) return;
-    onAddTask(value);
-    setValue("");
+  const handleSubmit = async () => {
+    const trimmed = value.trim();
+    if (!trimmed) return;
+    try {
+      onTaskAdded(await import("../api").then(m => m.createTask(trimmed)));
+      setValue("");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -30,7 +36,7 @@ const Input = ({ onAddTask }: InputProps) => {
           <img src={StarIcon} alt="" className="w-8 h-8" />
         </span>
       </div>
-      <button 
+      <button
         onClick={handleSubmit}
         className="ml-4 px-4 py-4 rounded-full bg-(--bg-dark) bg-opacity-20 backdrop-blur-[3px] border border-(--gold-cream) text-amber-100 hover:border-(--gold-cream) transition-colors cursor-pointer"
       >

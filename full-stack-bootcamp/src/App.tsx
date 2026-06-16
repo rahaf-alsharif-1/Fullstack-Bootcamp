@@ -7,7 +7,7 @@ import Input from "./components/Input";
 import TaskCard from "./components/TaskCard";
 import TaskModal from "./components/TaskModal";
 import ParticleBackground from "./components/ParticleBackground";
-import { getTasks, createTask, deleteTask, updateTask } from "./api";
+import { getAllTasks, updateTask, deleteTask } from "./api";
 import type { Task } from "./api";
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    getTasks()
+    getAllTasks()
       .then((data) => {
         setTasks(data);
         setLoading(false);
@@ -29,37 +29,24 @@ function App() {
 
   const openTask = tasks.find((t) => t.id === openTaskId) ?? null;
 
-  const handleAddTask = async (description: string) => {
+  const handleTaskAdded = (newTask: Task) => {
+    setTasks((prev) => [...prev, newTask]);
+  };
+
+  const handleUpdate = async (id: number, changes: Partial<Task>) => {
     try {
-      const newTask = await createTask(description);
-      setTasks((prev) => [...prev, newTask]);
+      const updated = await updateTask(id, changes);
+      setTasks((prev) => prev.map((t) => (t.id === id ? updated : t)));
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleDeleteTask = async (id: number) => {
+  const handleDelete = async (id: number) => {
     try {
       await deleteTask(id);
       setTasks((prev) => prev.filter((t) => t.id !== id));
       setOpenTaskId(null);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleToggleCompleted = async (id: number) => {
-    const taskToUpdate = tasks.find((t) => t.id === id);
-    if (!taskToUpdate) return;
-
-    try {
-      const updatedStatus = !taskToUpdate.completed;
-      const updatedTask = await updateTask(id, {
-        completed: updatedStatus,
-        completedOn: updatedStatus ? taskToUpdate.date : undefined,
-      });
-
-      setTasks((prev) => prev.map((t) => (t.id === id ? updatedTask : t)));
     } catch (error) {
       console.error(error);
     }
@@ -76,7 +63,7 @@ function App() {
 
       <div className="relative z-2 mx-auto w-[95vw] min-h-[90vh] border-[3px] border-(--text-cream) flex flex-col items-center gap-10 py-12 px-10 shadow-2xl my-12">
         <Header />
-        <Input onAddTask={handleAddTask} />
+        <Input onTaskAdded={handleTaskAdded} />
 
         {loading ? (
           <div className="text-amber-100 text-xl animate-pulse mt-10">Loading tasks...</div>
@@ -101,10 +88,11 @@ function App() {
 
         {openTask && (
           <TaskModal
-            open={!!openTask}
+            open={openTaskId !== null}
             onClose={() => setOpenTaskId(null)}
-            onToggleCompleted={() => handleToggleCompleted(openTask.id)}
-            onDelete={() => handleDeleteTask(openTask.id)}
+            onToggleCompleted={() => handleUpdate(openTask.id, { completed: !openTask.completed, completedOn: !openTask.completed ? openTask.date : undefined })}
+            onUpdate={(changes) => handleUpdate(openTask.id, changes)}
+            onDelete={() => handleDelete(openTask.id)}
             id={openTask.id}
             title={openTask.title}
             description={openTask.description}
