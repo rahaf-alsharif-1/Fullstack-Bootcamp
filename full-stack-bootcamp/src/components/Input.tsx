@@ -1,6 +1,7 @@
 import { useState } from "react";
 import StarIcon from "../assets/Star Icon.png";
 import AddIcon from "../assets/Edit Icon.png";
+import { createTask } from "../api";
 import type { Task } from "../api";
 
 type InputProps = {
@@ -14,7 +15,8 @@ const Input = ({ onTaskAdded }: InputProps) => {
     const trimmed = value.trim();
     if (!trimmed) return;
     try {
-      onTaskAdded(await import("../api").then(m => m.createTask(trimmed)));
+      const newTask = await createTask(trimmed);
+      onTaskAdded(newTask);
       setValue("");
     } catch (error) {
       console.error(error);
